@@ -25,7 +25,7 @@ public class UserDetailRestController {
 	UserDetailService userDetailService;
 
 	@RequestMapping(value = "helmetuser/registerUser", method = RequestMethod.POST)
-	public @ResponseBody String registerUser(@RequestHeader(value = "userName", required = true) String userName,
+	public @ResponseBody String registerUser(
 			@RequestHeader(value = "fullName", required = true) String fullName,
 			@RequestHeader(value = "passWord", required = true) String passWord,
 			@RequestHeader(value = "mobileNo", required = true) String mobileNo,
@@ -38,16 +38,17 @@ public class UserDetailRestController {
 		boolean isUserNameExist = false;
 
 		try {
-
+			System.out.println("GOT REQUEST");
+			String userName = "default";
 			if (!isNullOrEmpty(fullName) && !isNullOrEmpty(userName) && !isNullOrEmpty(passWord)
 					&& !isNullOrEmpty(mobileNo)) {
 
 				isMobileExist = userDetailService.isMobileNumberExist(mobileNo);
 
-				isUserNameExist = userDetailService.isUserExist(userName);
+				//isUserNameExist = userDetailService.isUserExist(userName);
 
 				String newOTP =		OTPGenerator.generateOTP(4);
-				if (!isUserNameExist) {
+				//if (!isUserNameExist) {
 
 					if (!isMobileExist) {
 
@@ -93,22 +94,22 @@ public class UserDetailRestController {
 
 					} else {
 
-						jsonObject.put(Constants.Status, "Fail - Mobile number already exist");
+						jsonObject.put(Constants.Status, "Mobile Number Already Registered");
 
 						jsonObject.put(Constants.StatusCode, Constants.Status_OK);
 
 					}
 
-				} else {
+				/*} else {
 
 					jsonObject.put(Constants.Status, "Fail - User Name exist, chose anther name");
 
 					jsonObject.put(Constants.StatusCode, Constants.Status_OK);
-				}
+				}*/
 
 			} else {
 
-				jsonObject.put(Constants.Status, "improper data, data may be null or empty");
+				jsonObject.put(Constants.Status, "invalid data, please enter valid details");
 
 				jsonObject.put(Constants.StatusCode, "203");
 			}
@@ -227,23 +228,23 @@ public class UserDetailRestController {
 	}
 
 	@RequestMapping(value = "helmetuser/userlogin", method = RequestMethod.POST)
-	public @ResponseBody String loginUser(@RequestHeader(value = "userId", required = true) String userId,
-			@RequestHeader(value = "userName", required = true) String userName,
+	public @ResponseBody String loginUser(
+			@RequestHeader(value = "mobileno", required = true) String mobileNo,
 			@RequestHeader(value = "passWord", required = true) String passWord) {
 
 		JSONObject jsonObject = new JSONObject();
 
-		System.out.println(userId + "" + userName + " attempted to log in");
+		System.out.println(mobileNo + " attempted to log in");
 
 		try {
 
-			int userIdVal = 0;
+			//int userIdVal = 0;
 
 			try {
 
-				userIdVal = Integer.parseInt(userId.trim());
+				//userIdVal = Integer.parseInt(userId.trim());
 
-				UserDetail userDetail = userDetailService.getUserById(userIdVal);
+				UserDetail userDetail = userDetailService.getUserByMobNo(mobileNo);
 
 				if (userDetail != null) {
 
@@ -251,28 +252,28 @@ public class UserDetailRestController {
 					String encodedData = encodeString(passWord);
 
 					System.out.println(userDetail.toString() + "-->" + decodedData + " condition: "
-							+ (userDetail.getUserName().equalsIgnoreCase(userName)
+							+ (userDetail.getMobileNo().equalsIgnoreCase(mobileNo)
 									&& (userDetail.getPassword().equals(encodedData))));
 
-					if (userDetail.getUserName().equalsIgnoreCase(userName)
+					if (userDetail.getMobileNo().equalsIgnoreCase(mobileNo)
 							&& userDetail.getPassword().equals(encodedData)) {
 
 						jsonObject.put("userid", userDetail.getUserId());
 
-						jsonObject.put(Constants.Status, Constants.Status_Success);
+						jsonObject.put(Constants.Status, "Login Success!");
 
 						jsonObject.put(Constants.StatusCode, "200");
 
 					} else {
 
-						jsonObject.put(Constants.Status, "Invalid credentials");
+						jsonObject.put(Constants.Status, "Invalid credentials!");
 
 						jsonObject.put(Constants.StatusCode, "203");
 					}
 
 				} else {
 
-					jsonObject.put(Constants.Status, "User not found");
+					jsonObject.put(Constants.Status, "Invalid credentials");
 
 					jsonObject.put(Constants.StatusCode, "203");
 				}
@@ -353,6 +354,62 @@ public class UserDetailRestController {
 
 		return jsonObject.toString().trim();
 
+	}
+	
+	@RequestMapping(value = "helmetuser/requestOtp", method = RequestMethod.POST)
+	public @ResponseBody String requestPasswordChangeOtp(
+			@RequestHeader(value = "mobileno", required = true) String mobileNo) {
+		JSONObject jsonObject = new JSONObject();
+		UserDetail userDetail = userDetailService.getUserByMobNo(mobileNo);
+		try {			
+			if (userDetail != null) {
+				/*Random randomPassword = new Random(System.currentTimeMillis());
+				int passwd = (randomPassword.nextInt(7) + randomPassword.nextInt(8)) * 10000 + randomPassword.nextInt(10000);*/
+				//String pwd = Integer.toString(passwd);
+				String pwd = OTPGenerator.generateOTP(6);
+				System.out.println("OTP is :: "+pwd);
+				//send SMS to user and save the same otp in users details.
+				userDetail.setOtp("5555");
+				//userDetail.setOtp(pwd);
+				userDetailService.updateUserDetail(userDetail);
+				jsonObject.put(Constants.Status, "OTP has been sent to Registered Mobile No.");
+				jsonObject.put(Constants.StatusCode, "200");
+			} else {
+				jsonObject.put(Constants.Status, "Invalid Mobile No.");
+				jsonObject.put(Constants.StatusCode, "203");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonObject.toString();
+	}
+	
+	@RequestMapping(value = "helmetuser/changePassword", method = RequestMethod.POST)
+	public @ResponseBody String requestPasswordChange(
+			@RequestHeader(value = "mobileno", required = true) String mobileNo,
+			@RequestHeader(value = "otp", required = true) String otp,
+			@RequestHeader(value = "password", required = true) String password) {
+		JSONObject jsonObject = new JSONObject();
+		UserDetail userDetail = userDetailService.getUserByMobNo(mobileNo);
+		try {
+			if (userDetail != null) {
+				if (userDetail.getOtp().equalsIgnoreCase(otp)) {
+					userDetail.setPassword(encodeString(password));
+					userDetailService.updateUserDetail(userDetail);
+					jsonObject.put(Constants.Status, "Password Changed Successfully.");
+					jsonObject.put(Constants.StatusCode, "200");
+				} else {
+					jsonObject.put(Constants.Status, "Invalid OTP");
+					jsonObject.put(Constants.StatusCode, "203");
+				}
+			} else {
+				jsonObject.put(Constants.Status, "Invalid Mobile No.");
+				jsonObject.put(Constants.StatusCode, "203");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonObject.toString();
 	}
 
 	@RequestMapping(value = "helmetuser/validateotp", method = RequestMethod.POST)
