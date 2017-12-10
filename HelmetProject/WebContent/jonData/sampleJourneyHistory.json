@@ -1,0 +1,60 @@
+{
+  "journeyHistory": [
+    {
+      "journeyID": "JID12121",
+      "fromLocation": "HYD",
+      "toLocation": "KarimNagar",
+      "dateOfJourney": "29-Nov-2016",
+      "noOfPassengers": "4",
+      "distance": "320KM",
+      "journeyHours": "6Hrs",
+      "driverName": "Harish",
+      "vechileNumber": "TS07TV1234",
+      "driverNumber": "9848012345",
+      "carName": "Swift Dezire",
+      "totalPay": "1500"
+    },
+    {
+      "journeyID": "JID123",
+      "fromLocation": "HYD",
+      "toLocation": "VIZAG",
+      "dateOfJourney": "02-Dec-2016",
+      "noOfPassengers": "4",
+      "distance": "820KM",
+      "journeyHours": "12Hrs",
+      "driverName": "SaiKrishna",
+      "vechileNumber": "TS07TV1234",
+      "driverNumber": "9848012345",
+      "carName": "Swift Dezire",
+      "totalPay": "3500"
+    },
+    {
+      "journeyID": "JID1235",
+      "fromLocation": "HYD",
+      "toLocation": "Warangal",
+      "dateOfJourney": "30-Nov-2016",
+      "noOfPassengers": "1",
+      "distance": "150KM",
+      "journeyHours": "1.5Hrs",
+      "driverName": "Harish",
+      "vechileNumber": "TS07TV1234",
+      "driverNumber": "9848012345",
+      "carName": "Swift Dezire",
+      "totalPay": "500"
+    },
+    {
+      "journeyID": "JID12121",
+      "fromLocation": "HYD",
+      "toLocation": "Sec-Bad",
+      "dateOfJourney": "30-Nov-2016",
+      "noOfPassengers": "6",
+      "distance": "20KM",
+      "journeyHours": "30:Min",
+      "driverName": "sai",
+      "vechileNumber": "TS07TV1234",
+      "driverNumber": "9848012345",
+      "carName": "Swift Dezire",
+      "totalPay": "320"
+    }
+  ]
+}

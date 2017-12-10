@@ -1,0 +1,54 @@
+{
+  "userName": "harish",
+  "phoneNumber": "9951793804",
+  "email": "harish@gmail.com",
+  "userImage": "http://www.photo/harish.jpg",
+  "vehicleName": "swift dezire",
+  "vehicleNumber": "TS03VA1248",
+  "vehicleType": "basic",
+  "vehicleImage": "http://www.vehicleImage.jpg",
+  "currentLocation": "Hyderabad",
+  "seatCapacity": "4",
+  "IDProof": {
+    "drivingLicenceNumber": "TS07TPS1548985",
+    "panCardNumber": "PAN123ID1",
+    "votarIDNumber": "TS78MAX15453"
+  },
+  "travelAgent": "OrangeTravells",
+  "travelAgentNumber": "040-123456",
+  "travelAgentLocation": "Hyderabad",
+  "accessories": {
+    "wifi": true,
+    "TV": true,
+    "AC": true,
+    "firstAidKit": true
+  },
+  "carCondition": "good",
+  "rating": "2.5",
+  "userComments": [
+    {
+      "username": "harish",
+      "comment": "jaffa driver",
+      "rating": "2.0",
+      "userEmail": "harish@gmail.com"
+    },
+    {
+      "username": "sai",
+      "comment": "good driver",
+      "rating": "2.0",
+      "userEmail": "sai@gmail.com"
+    },
+    {
+      "username": "krishna",
+      "comment": "very friendly driver",
+      "rating": "4.5",
+      "userEmail": "krishna@gmail.com"
+    },
+    {
+      "username": "chandra",
+      "comment": "good driver",
+      "rating": "1.0",
+      "userEmail": "chandra@gmail.com"
+    }
+  ]
+}

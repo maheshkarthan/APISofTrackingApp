@@ -1,0 +1,20 @@
+{
+  "journeyId": "1254",
+  "journeyDate": "12th October 2015",
+  "journeyHours": "4 Hours",
+  "journeyKilometres": "810 KM",
+  "sourceLocation":"Hyderabad",
+  "destinationLocation":"Lingampally",
+  "amount": "Rs 1500/-",
+  "amountPaidBy": "PayTM",
+  "amountPaid": "Yes",
+  "driverId":"d8468",
+  "driverName": "Harish",
+  "driverNumber": "7845454877",
+  "vehicleType":"Basic",
+  "vehicleNumber":"TS01BV4556",
+  "passengerId": "p124",
+  "passengerName": "Praveeth",
+  "passengerNumber": "9663258441",
+  "numberOfPassengers": "5"
+}

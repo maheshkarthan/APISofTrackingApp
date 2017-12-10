@@ -1,0 +1,44 @@
+[
+  {
+  "notificationId": "nf323",
+  "title": "Request for Cab",
+  "message": "Your voyage is on 15th December 2016 from Hyd to Vijayawada with SUV cab booked with us. Kindly cooperative with us for further details.",
+  "notificationType": "Booking",
+  "notificationDate": "8th December 2016"
+},
+{
+  "notificationId": "udjks",
+  "title": "Payment Cab",
+  "message": "We received payment Rs. 1800/- for your voyage is on 8th December 2016 from Hyd to Vijayawada with SUV cab booked with us. Kindly contact us if any information.",
+  "notificationType": "Payment",
+  "notificationDate": "8th December 2016"
+},
+{
+  "notificationId": "jri3",
+  "title": "Confirmed Cab",
+  "message": "Your voyage is on 8th December 2016 from Hyd to Vijayawada with SUV cab booked is confirmed with driver name Kavyan, vehicle number TS 02 BD 9877 and driver number is 9874561232. Kindly contact us if any information.",
+  "notificationType": "Booking",
+  "notificationDate": "15th December 2016"
+},
+{
+  "notificationId": "djkd38",
+  "title": "Cab is arrive",
+  "message": "Your cab is arrived at your location for your voyage is on 8th December 2016 from Hyd to Vijayawada with SUV cab booked is confirmed with driver name Kavyan, vehicle number TS 02 BD 9877 and driver number is 9874561232. Kindly contact us if any information.",
+  "notificationType": "Voyage",
+  "notificationDate": "15th December 2016"
+},
+{
+  "notificationId": "u4847",
+  "title": "Cab is started",
+  "message": "Your can is started from your location for your voyage is on 8th December 2016 from Hyd to Vijayawada with SUV cab booked is confirmed with driver name Kavyan, vehicle number TS 02 BD 9877 and driver number is 9874561232. Kindly contact us if any information.",
+  "notificationType": "Voyage",
+  "notificationDate": "15th December 2016"
+},
+{
+  "notificationId": "u4847",
+  "title": "Reached Destination",
+  "message": "We reaches you at your destination from your location to Vijayawada with SUV cab of driver name Kavyan, vehicle number TS 02 BD 9877 and driver number is 9874561232. Kindly contact us if any information.",
+  "notificationType": "Voyage",
+  "notificationDate": "15th December 2016"
+}
+]

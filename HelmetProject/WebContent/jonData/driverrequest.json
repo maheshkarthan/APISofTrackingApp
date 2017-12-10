@@ -1,0 +1,30 @@
+{
+  "journeyId": "rw4020",
+  "userId": "u498934",
+  "userName": "Lahith",
+  "userContactNo": "9854684644",
+  "sourceLatitude": 17.54616,
+  "sourceLongitude": 78.565154,
+  "sourceLocation": "Hyderabad",
+  "destinationLatitude": 17.68464864,
+  "destinationLongitude": 78.46846554,
+  "destinationLocation": "JNTU",
+  "dateOfJourney": "21st January 2016",
+  "timeOfJourney": "4.00 PM",
+  "numberOfPassengers": {
+    "adults": 2,
+    "children": 2
+  },
+  "vehicle": "Car",
+  "vehicleType": "Basic",
+  "isOneWayTrip": "Yes",
+  "isTwoWayTrip": "No",
+  "amountPaidBy": "PayTM",
+  "paidAmount": "Rs 750/-",
+  "drivedAcceptedBy": "Pradhyan",
+  "driverAcceptedId": "pr948392",
+  "driverConfirmedBy": "Lakshit",
+  "driverConfirmedId": "d448983d",
+  "isDrivedCancelledJourney": "No",
+  "isUserCancelledJourney": "No"
+}
