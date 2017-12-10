@@ -76,7 +76,7 @@
 
 	<jms:listener-container connection-factory="connectionFactory" acknowledge="auto" concurrency="10" destination-type="queue">
 		<!-- <jms:listener destination="driver" ref="gpslocationlistener" /> -->
-		<jms:listener destination="userloc" ref="gpslocationlistenerApp" /> 
+		<jms:listener destination="userlocation" ref="gpslocationlistenerApp" /> 
 	</jms:listener-container>
 
 	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
