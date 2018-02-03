@@ -38,19 +38,19 @@ public class TrackingRestController {
 	@Autowired
 	LocationDetailService locationDetailService;
 
-	@RequestMapping(value = "RequestTracking", method = RequestMethod.POST)
-	public @ResponseBody String requesttracking(@RequestHeader(value = "userId", required = true) String userId,
+	@RequestMapping(value = "requestTracking", method = RequestMethod.POST)
+	public @ResponseBody String requesttracking(
 			@RequestHeader(value = "myMobileNumber", required = true) String myMobileNumber,
 			@RequestHeader(value = "friendMobileNumber", required = true) String friendMobileNumber) {
 
-		System.out.println("RequestTracking: \nuserId: " + userId + " \nmyMobileNumber: " + myMobileNumber
+		System.out.println("RequestTracking: \n myMobileNumber: " + myMobileNumber
 				+ "\nfriendMobileNumber: " + friendMobileNumber);
 
 		TrackingMe trackingMe = new TrackingMe();
 
 		JSONObject jsonObject = new JSONObject();
 
-		UserDetail userDetail = userDetailService.getUserById(Integer.parseInt(userId));
+		UserDetail userDetail = userDetailService.getUserByMobNo(myMobileNumber);
 
 		boolean isFriendExist = userDetailService.isUserExist(friendMobileNumber);
 
@@ -238,77 +238,33 @@ public class TrackingRestController {
 	 * @return List of user who are tracking my number
 	 */
 	@RequestMapping(value = "friendsYouAreTracking", method = RequestMethod.POST)
-	public @ResponseBody String friendsYouAreTracking(@RequestHeader(value = "mobileNo") String mobileNo) {
+	public @ResponseBody String friendsYouAreTracking(
+			@RequestHeader(value = "mobileNo") String mobileNo) {
 
 		JSONArray jsonArray = new JSONArray();
-
 		JSONObject jsonObject = new JSONObject();
-
-		UserDetail userDetail;
-
-		List<TrackingMe> trackersList = trackingMeService.getFriendsYouAreTrackingList(mobileNo);
-
 		try {
-
-			jsonObject.put(Constants.Status, Constants.Status_Success);
-
-			jsonObject.put(Constants.StatusCode, Constants.Status_OK);
-
-			for (int i = 0; i < trackersList.size(); i++) {
-
-				userDetail = userDetailService.getUserByMobNo(trackersList.get(i).getMyMobileNo().toString());
-
-				if (userDetail != null) {
-
-					JSONObject jsonObject1 = new JSONObject();
-
-					jsonObject1.put("userId", userDetail.getUserId());
-
-					jsonObject1.put("fullName", userDetail.getFullName());
-
-					jsonObject1.put("userName", userDetail.getUserName());
-
-					jsonObject1.put("mobileNo", userDetail.getMobileNo());
-
-					jsonObject1.put("userEmailId", userDetail.getUserEmailId());
-
-					try {
-
-						LocationDetail locdt = locationDetailService.getUserLocation(userDetail.getMobileNo());
-
-						jsonObject1.put("lattitude", locdt.getLattitude());
-
-						jsonObject1.put("longitude", locdt.getLongitude());
-
-						jsonObject1.put("lattitude", locdt.getUpdatedOn());
-
-					} catch (Exception e1) {
-
-						e1.printStackTrace();
-
-					}
-
-					jsonArray.put(jsonObject1);
+			List<TrackingMe> trackersList = trackingMeService.getFriendsYouAreTrackingList(mobileNo);
+			if (!trackersList.isEmpty()) {
+				for (TrackingMe trackingMe : trackersList) {
+					jsonArray.put(trackingMe.getFriendsMobileNo());
 				}
+				jsonObject.put(Constants.Status, Constants.Status_Success);
+				jsonObject.put("requestedContactsList", jsonArray);
+				jsonObject.put(Constants.StatusCode, Constants.Status_OK);
+			} else {
+				jsonObject.put(Constants.Status, Constants.Status_Fail);
+				jsonObject.put("requestedContactsList", jsonArray);
+				jsonObject.put(Constants.StatusCode, "201");
 			}
-
-			jsonObject.put("List", jsonArray.toString());
-
 		} catch (JSONException ex) {
-
 			ex.printStackTrace();
-
 			try {
-
-				jsonObject.put(Constants.Status_Exception, "Exception");
-
+				jsonObject.put(Constants.Status, Constants.Status_Exception);
 			} catch (Exception e) {
-
 				e.printStackTrace();
-
 			}
 		}
-
 		return jsonObject.toString().trim();
 	}
 }

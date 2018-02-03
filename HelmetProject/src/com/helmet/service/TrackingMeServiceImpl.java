@@ -55,7 +55,6 @@ public class TrackingMeServiceImpl implements TrackingMeService {
 	@Override
 	@Transactional
 	public List<TrackingMe> getFriendsYouAreTrackingList(String mobileNo) {
-		
 		return trackingMeDao.getFriendsYouAreTrackingList(mobileNo);
 	}
 
