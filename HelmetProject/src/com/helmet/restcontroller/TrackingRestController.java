@@ -100,18 +100,18 @@ public class TrackingRestController {
 
 	
 	@RequestMapping(value = "acceptTracking", method = RequestMethod.POST)
-	public @ResponseBody String acceptTracking(@RequestHeader(value = "userId", required = true) String userId,
+	public @ResponseBody String acceptTracking(
 			@RequestHeader(value = "myMobileNumber", required = true) String myMobileNumber,
 			@RequestHeader(value = "friendMobileNumber", required = true) String friendMobileNumber) {
 
-		System.out.println("acceptTracking: \nuserId: " + userId + " \nmyMobileNumber: " + myMobileNumber
+		System.out.println("acceptTracking: \nmyMobileNumber: " + myMobileNumber
 				+ "\nfriendMobileNumber: " + friendMobileNumber);
 
 		TrackingMe trackingMe = new TrackingMe();
 
 		JSONObject jsonObject = new JSONObject();
 
-		UserDetail userDetail = userDetailService.getUserById(Integer.parseInt(userId));
+		UserDetail userDetail = userDetailService.getUserByMobNo(myMobileNumber);
 
 		boolean isFriendExist = userDetailService.isUserExist(friendMobileNumber);
 
@@ -125,7 +125,7 @@ public class TrackingRestController {
 					
 					trackingMe.setTrackingStatus(Constants.Status_Accepted);
 					
-					trackingMe.setCreatedOn(new Date());
+					trackingMe.setUpdatedOn(new Date());
 					
 					trackingMe.setUserIdFk(userDetail);
 					
@@ -237,8 +237,8 @@ public class TrackingRestController {
 	 * 
 	 * @return List of user who are tracking my number
 	 */
-	@RequestMapping(value = "friendsYouAreTracking", method = RequestMethod.POST)
-	public @ResponseBody String friendsYouAreTracking(
+	@RequestMapping(value = "friendsYouAreRequested", method = RequestMethod.POST)
+	public @ResponseBody String friendsYouAreRequested(
 			@RequestHeader(value = "mobileNo") String mobileNo) {
 
 		JSONArray jsonArray = new JSONArray();
@@ -255,6 +255,37 @@ public class TrackingRestController {
 			} else {
 				jsonObject.put(Constants.Status, Constants.Status_Fail);
 				jsonObject.put("requestedContactsList", jsonArray);
+				jsonObject.put(Constants.StatusCode, "201");
+			}
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+			try {
+				jsonObject.put(Constants.Status, Constants.Status_Exception);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return jsonObject.toString().trim();
+	}
+	
+	@RequestMapping(value = "requestsRecieved", method = RequestMethod.POST)
+	public @ResponseBody String requestsRecieved(
+			@RequestHeader(value = "mobileNo") String mobileNo) {
+
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
+		try {
+			List<TrackingMe> trackersList = trackingMeService.getRequestsRecievedList(mobileNo);
+			if (!trackersList.isEmpty()) {
+				for (TrackingMe trackingMe : trackersList) {
+					jsonArray.put(trackingMe.getMyMobileNo());
+				}
+				jsonObject.put(Constants.Status, Constants.Status_Success);
+				jsonObject.put("requestsRecievedList", jsonArray);
+				jsonObject.put(Constants.StatusCode, Constants.Status_OK);
+			} else {
+				jsonObject.put(Constants.Status, Constants.Status_Fail);
+				jsonObject.put("requestsRecievedList", jsonArray);
 				jsonObject.put(Constants.StatusCode, "201");
 			}
 		} catch (JSONException ex) {

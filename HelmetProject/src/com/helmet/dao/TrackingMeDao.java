@@ -18,6 +18,8 @@ public interface TrackingMeDao {
 
 	public List<TrackingMe> getFriendsYouAreTrackingList(String mobileNo);
 	
+	public List<TrackingMe> getRequestsRecievedList(String mobileNo);
+	
 	public TrackingMe getFriendTrackingDetail(String mobileNo);
 
 }
