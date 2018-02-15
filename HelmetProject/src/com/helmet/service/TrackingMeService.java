@@ -19,6 +19,8 @@ public interface TrackingMeService {
 	public List<TrackingMe> getFriendsYouAreTrackingList(String mobileNo);
 	
 	public List<TrackingMe> getRequestsRecievedList(String mobileNo);
+	
+	public List<TrackingMe> getRequestAcceptedFriendsList(String mobileNo);
 
 	public TrackingMe getFriendTrackingDetail(String mobileNo);
 	
