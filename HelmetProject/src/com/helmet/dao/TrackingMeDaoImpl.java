@@ -100,6 +100,20 @@ public class TrackingMeDaoImpl implements TrackingMeDao {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TrackingMe> getRequestAcceptedbyMeList(String mobileNo) {
+		try {
+			Query query = sessionFactory.getCurrentSession().createQuery("FROM TrackingMe tm WHERE tm.myMobileNo =:myMobileNo and tm.trackingStatus =:Accepted");
+			query.setParameter("myMobileNo", mobileNo);
+			query.setParameter("Accepted", "Accepted");
+			return query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	@Override
 	public TrackingMe getFriendTrackingDetail(String mobileNo) {

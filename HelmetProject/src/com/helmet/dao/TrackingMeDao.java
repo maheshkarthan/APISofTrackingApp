@@ -22,6 +22,8 @@ public interface TrackingMeDao {
 	
 	public List<TrackingMe> getRequestAcceptedFriendsList(String mobileNo);
 	
+	public List<TrackingMe> getRequestAcceptedbyMeList(String mobileNo);
+	
 	public TrackingMe getFriendTrackingDetail(String mobileNo);
 
 }

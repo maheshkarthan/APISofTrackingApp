@@ -306,10 +306,10 @@ public class TrackingRestController {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		try {
-			List<TrackingMe> trackersList = trackingMeService.getRequestsRecievedList(myMobileNumber);
+			List<TrackingMe> trackersList = trackingMeService.getRequestAcceptedbyMeList(myMobileNumber);
 			if (!trackersList.isEmpty()) {
 				for (TrackingMe trackingMe : trackersList) {
-					jsonArray.put(trackingMe.getMyMobileNo());
+					jsonArray.put(trackingMe.getFriendsMobileNo());
 				}
 				jsonObject.put(Constants.Status, Constants.Status_Success);
 				jsonObject.put("requestAcceptedFriendsList", jsonArray);
@@ -317,6 +317,37 @@ public class TrackingRestController {
 			} else {
 				jsonObject.put(Constants.Status, Constants.Status_Fail);
 				jsonObject.put("requestAcceptedFriendsList", jsonArray);
+				jsonObject.put(Constants.StatusCode, "201");
+			}
+		} catch (JSONException ex) {
+			ex.printStackTrace();
+			try {
+				jsonObject.put(Constants.Status, Constants.Status_Exception);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return jsonObject.toString().trim();
+	}
+	
+	@RequestMapping(value = "requestFriendsTrackingMe", method = RequestMethod.POST)
+	public @ResponseBody String requestFriendsTrackingMe(
+			@RequestHeader(value = "myMobileNumber") String myMobileNumber) {
+
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
+		try {
+			List<TrackingMe> trackersList = trackingMeService.getRequestAcceptedFriendsList(myMobileNumber);
+			if (!trackersList.isEmpty()) {
+				for (TrackingMe trackingMe : trackersList) {
+					jsonArray.put(trackingMe.getMyMobileNo());
+				}
+				jsonObject.put(Constants.Status, Constants.Status_Success);
+				jsonObject.put("friendsTrackingMeList", jsonArray);
+				jsonObject.put(Constants.StatusCode, Constants.Status_OK);
+			} else {
+				jsonObject.put(Constants.Status, Constants.Status_Fail);
+				jsonObject.put("friendsTrackingMeList", jsonArray);
 				jsonObject.put(Constants.StatusCode, "201");
 			}
 		} catch (JSONException ex) {
