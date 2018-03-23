@@ -1,12 +1,21 @@
 package com.helmet.restcontroller;
 
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -481,6 +490,75 @@ public class UserDetailRestController {
 	
 		return jsonObject.toString().trim();
 
+	}
+	
+	@RequestMapping(value = "helmetuser/getMqttIp", method = RequestMethod.GET)
+	public @ResponseBody String getMqttIp(HttpServletResponse response, HttpSession httpsession) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String path = "";
+			String OS = System.getProperty("os.name").toLowerCase();
+			if (OS.indexOf("win") >= 0) {
+				// windows OS
+				path = "C:/Users/welcome/git/helmet/HelmetProject/src/resources/application.properties";
+			} else {
+				// Linux OS
+				path = "/application.properties";
+			}
+			FileReader reader = new FileReader(path);
+			Properties properties = new Properties();
+			if (reader != null) {
+				properties.load(reader);
+			}
+
+			if (properties.getProperty("MQTT_IP") != null) {
+				System.out.println("MQTTIP:: "
+						+ properties.getProperty("MQTT_IP"));
+				jsonObject.put("mqttip", properties.getProperty("MQTT_IP"));
+			} else {
+				jsonObject.put("mqttip", "");
+			}
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jsonObject.toString();
+	}
+	
+	@RequestMapping(value = "helmetuser/setMqttIp", method = RequestMethod.GET)
+	public @ResponseBody String setMqttIp(
+			@RequestHeader(value = "MqttIp", required = true) String mqttIp) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String path = "";
+			String OS = System.getProperty("os.name").toLowerCase();
+			if (OS.indexOf("win") >= 0) {
+				// windows OS
+				path = "C:/Users/welcome/git/helmet/HelmetProject/src/resources/application.properties";
+			} else {
+				// Linux OS
+				path = "/application.properties";
+			}
+			FileReader reader = new FileReader(path);
+			Properties properties = new Properties();
+			if (reader != null) {
+				properties.load(reader);
+			}
+			
+			if(properties.getProperty("MQTT_IP") != null) {	
+				properties.setProperty("MQTT_IP", mqttIp);
+				properties.store(new FileOutputStream(path), null);
+				System.out.println("MQTTIP:: "+properties.getProperty("MQTT_IP"));
+				jsonObject.put("mqttip", properties.getProperty("MQTT_IP"));
+				jsonObject.put("success", "Property has loaded successfully");
+			} else {
+				jsonObject.put("fail", "Property loading failed");
+			}
+			reader.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return jsonObject.toString();
 	}
 
 	private static boolean isNullOrEmpty(String data) {
