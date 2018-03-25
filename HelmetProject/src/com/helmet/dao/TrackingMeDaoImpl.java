@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.helmet.entity.TrackingMe;
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 
 @Repository("trackingMeDao")
 public class TrackingMeDaoImpl implements TrackingMeDao {
@@ -121,6 +122,19 @@ public class TrackingMeDaoImpl implements TrackingMeDao {
 		Query query = sessionFactory.getCurrentSession().createQuery("select tm FROM TrackingMe tm WHERE tm.myMobileNo =:myMobileNo");
 		
 		return(TrackingMe)query.setString("myMobileNo", mobileNo).uniqueResult();
+	}
+
+	@Override
+	public TrackingMe getEarlierRequestExists(String myMobileNo, String friendsMobileNo) {
+		try {
+			Query query = sessionFactory.getCurrentSession().createQuery("FROM TrackingMe tm WHERE tm.myMobileNo =:myMobileNo and tm.friendsMobileNo =:friendsMobileNo");
+			query.setParameter("myMobileNo", myMobileNo);
+			query.setParameter("friendsMobileNo", friendsMobileNo);
+			return (TrackingMe) query.uniqueResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 

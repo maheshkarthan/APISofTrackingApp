@@ -26,4 +26,6 @@ public interface TrackingMeService {
 
 	public TrackingMe getFriendTrackingDetail(String mobileNo);
 	
+	public TrackingMe getEarlierRequestExists(String myMobileNo, String friendsMobileNo);
+	
 }

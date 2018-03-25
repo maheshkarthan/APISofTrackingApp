@@ -83,4 +83,11 @@ public class TrackingMeServiceImpl implements TrackingMeService {
 		return trackingMeDao.getFriendTrackingDetail(mobileNo);
 	}
 
+	@Override
+	@Transactional
+	public TrackingMe getEarlierRequestExists(String myMobileNo,
+			String friendsMobileNo) {
+		return trackingMeDao.getEarlierRequestExists(myMobileNo, friendsMobileNo);
+	}
+
 }

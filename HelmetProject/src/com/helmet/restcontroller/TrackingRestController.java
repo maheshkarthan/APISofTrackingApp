@@ -42,58 +42,54 @@ public class TrackingRestController {
 	public @ResponseBody String requesttracking(
 			@RequestHeader(value = "myMobileNumber", required = true) String myMobileNumber,
 			@RequestHeader(value = "friendMobileNumber", required = true) String friendMobileNumber) {
-
 		System.out.println("RequestTracking: \n myMobileNumber: " + myMobileNumber
 				+ "\nfriendMobileNumber: " + friendMobileNumber);
-
-		TrackingMe trackingMe = new TrackingMe();
-
+		TrackingMe trackingMe = null;
 		JSONObject jsonObject = new JSONObject();
 
 		UserDetail userDetail = userDetailService.getUserByMobNo(myMobileNumber);
-
 		boolean isFriendExist = userDetailService.isUserExist(friendMobileNumber);
 
-		if (!isFriendExist) {
-
+		if (isFriendExist) {
 			try {
-
-				trackingMe.setFriendsMobileNo(friendMobileNumber);
-
-				trackingMe.setMyMobileNo(myMobileNumber);
-
-				trackingMe.setUpdatedOn(new Date());
-
-				trackingMe.setTrackingStatus(Constants.Status_Requestd);
-
-				trackingMe.setCreatedOn(new Date());
-
-				trackingMe.setUserIdFk(userDetail);
-
-				trackingMeService.addTrackMeDetails(trackingMe);
-
-				jsonObject.put(Constants.Status, Constants.Status_Success);
-
-				jsonObject.put(Constants.StatusCode, Constants.Status_OK);
-
+				trackingMe = trackingMeService.getEarlierRequestExists(myMobileNumber, friendMobileNumber);
+				if (trackingMe != null) {
+					trackingMe.setUpdatedOn(new Date());
+					trackingMe.setTrackingStatus(Constants.Status_Requestd);
+					trackingMe.setUserIdFk(userDetail);
+					trackingMeService.addTrackMeDetails(trackingMe);
+					jsonObject.put(Constants.Status, Constants.Status_Success);
+					jsonObject.put(Constants.StatusCode, Constants.Status_OK);
+				} else {
+					trackingMe = new TrackingMe();
+					trackingMe.setFriendsMobileNo(friendMobileNumber);
+					trackingMe.setMyMobileNo(myMobileNumber);
+					trackingMe.setUpdatedOn(new Date());
+					trackingMe.setTrackingStatus(Constants.Status_Requestd);
+					trackingMe.setCreatedOn(new Date());
+					trackingMe.setUserIdFk(userDetail);
+					trackingMeService.addTrackMeDetails(trackingMe);
+					jsonObject.put(Constants.Status, Constants.Status_Success);
+					jsonObject.put(Constants.StatusCode, Constants.Status_OK);
+				}
 			} catch (Exception e) {
-
 				try {
-
 					jsonObject.put(Constants.Status, Constants.Status_Fail);
-
 					jsonObject.put(Constants.StatusCode, "203");
-
 				} catch (Exception e1) {
-
 					e1.printStackTrace();
 				}
-
 				e.printStackTrace();
 			}
-
+		} else {
+			try {
+				jsonObject.put(Constants.Status, "User not Registered");
+				jsonObject.put(Constants.StatusCode, "201");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
 		return jsonObject.toString().trim();
 	}
 
@@ -103,56 +99,42 @@ public class TrackingRestController {
 	public @ResponseBody String acceptTracking(
 			@RequestHeader(value = "myMobileNumber", required = true) String myMobileNumber,
 			@RequestHeader(value = "friendMobileNumber", required = true) String friendMobileNumber) {
-
 		System.out.println("acceptTracking: \nmyMobileNumber: " + myMobileNumber
 				+ "\nfriendMobileNumber: " + friendMobileNumber);
-
 		TrackingMe trackingMe = new TrackingMe();
-
 		JSONObject jsonObject = new JSONObject();
-
 		UserDetail userDetail = userDetailService.getUserByMobNo(myMobileNumber);
-
 		boolean isFriendExist = userDetailService.isUserExist(friendMobileNumber);
-
-		if (!isFriendExist) {
-
+		if (isFriendExist) {
 			try {
-				
-				trackingMe = trackingMeService.getFriendTrackingDetail(friendMobileNumber);
-				
-				if(trackingMe!=null){
-					
+				trackingMe = trackingMeService.getEarlierRequestExists(myMobileNumber, friendMobileNumber);
+				if(trackingMe != null){
 					trackingMe.setTrackingStatus(Constants.Status_Accepted);
-					
 					trackingMe.setUpdatedOn(new Date());
-					
-					trackingMe.setUserIdFk(userDetail);
-					
+					trackingMe.setUserIdFk(userDetail);	
 					trackingMeService.addTrackMeDetails(trackingMe);
+					jsonObject.put(Constants.Status, Constants.Status_Success);
+					jsonObject.put(Constants.StatusCode, Constants.Status_OK);
+				} else {
+					jsonObject.put(Constants.Status, "No Requests Recieved to get Accepted");
+					jsonObject.put(Constants.StatusCode, "201");
 				}
-				
-
-				jsonObject.put(Constants.Status, Constants.Status_Success);
-
-				jsonObject.put(Constants.StatusCode, Constants.Status_OK);
-
 			} catch (Exception e) {
-
 				try {
-
 					jsonObject.put(Constants.Status, Constants.Status_Fail);
-
 					jsonObject.put(Constants.StatusCode, "203");
-
 				} catch (Exception e1) {
-
 					e1.printStackTrace();
 				}
-
 				e.printStackTrace();
 			}
-
+		} else {
+			try {
+				jsonObject.put(Constants.Status, "User not Registered");
+				jsonObject.put(Constants.StatusCode, "201");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return jsonObject.toString().trim();
