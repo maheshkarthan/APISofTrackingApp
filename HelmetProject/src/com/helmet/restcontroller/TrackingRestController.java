@@ -107,7 +107,8 @@ public class TrackingRestController {
 		boolean isFriendExist = userDetailService.isUserExist(friendMobileNumber);
 		if (isFriendExist) {
 			try {
-				trackingMe = trackingMeService.getEarlierRequestExists(myMobileNumber, friendMobileNumber);
+				//Here FriendsNumber should be myno and myno should be FriendsNumber
+				trackingMe = trackingMeService.getEarlierRequestExists(friendMobileNumber, myMobileNumber);
 				if(trackingMe != null){
 					trackingMe.setTrackingStatus(Constants.Status_Accepted);
 					trackingMe.setUpdatedOn(new Date());
