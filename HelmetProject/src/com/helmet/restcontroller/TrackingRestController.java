@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.helmet.entity.LocationDetail;
 import com.helmet.entity.TrackingMe;
 import com.helmet.entity.UserDetail;
 import com.helmet.service.LocationDetailService;
@@ -225,11 +224,20 @@ public class TrackingRestController {
 			@RequestHeader(value = "mobileNo") String mobileNo) {
 
 		JSONArray jsonArray = new JSONArray();
+		JSONArray acceptedContactsListJsonArray = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		try {
-			List<TrackingMe> trackersList = trackingMeService.getFriendsYouAreTrackingList(mobileNo);
-			if (!trackersList.isEmpty()) {
-				for (TrackingMe trackingMe : trackersList) {
+			List<TrackingMe> requestedContactsList = trackingMeService.getFriendsYouAreTrackingList(mobileNo);
+			
+			//Get Accepted Contacts List
+			List<TrackingMe> acceptedContactsList = trackingMeService.getRequestAcceptedbyMeList(mobileNo);
+				for (TrackingMe acceptedContact : acceptedContactsList) {
+					acceptedContactsListJsonArray.put(acceptedContact.getFriendsMobileNo());
+				}
+			jsonObject.put("requestAcceptedFriendsList", acceptedContactsListJsonArray);
+			
+			if (!requestedContactsList.isEmpty()) {
+				for (TrackingMe trackingMe : requestedContactsList) {
 					jsonArray.put(trackingMe.getFriendsMobileNo());
 				}
 				jsonObject.put(Constants.Status, Constants.Status_Success);
