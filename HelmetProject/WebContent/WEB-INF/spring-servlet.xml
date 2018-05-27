@@ -66,7 +66,7 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-<!-- JMS LISTENER PART
+	<!-- JMS LISTENER PART -->
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<constructor-arg name="connectionFactory" ref="connectionFactory" />
 	</bean>
@@ -76,18 +76,17 @@
 	</bean>
 
 	<jms:listener-container connection-factory="connectionFactory" acknowledge="auto" concurrency="10" destination-type="queue">
-		<jms:listener destination="driver" ref="gpslocationlistener" />
 		<jms:listener destination="userlocation" ref="gpslocationlistenerApp" /> 
 	</jms:listener-container>
 
 	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
 		<property name="brokerURL">
-			<value>tcp://localhost:61616</value>
+			<value>${mqtt.ipport}</value>
 		</property>
 	</bean>
 
 	<bean id="messageConverter"
 		class="org.springframework.jms.support.converter.MappingJackson2MessageConverter">
 	</bean>
- -->
+ 
 </beans>

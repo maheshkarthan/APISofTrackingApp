@@ -1,5 +1,6 @@
 package com.helmet.listener;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.jms.Message;
@@ -29,86 +30,49 @@ public class AppLocationListenerTask implements MessageListener {
 	@Override
 	public void onMessage(Message paramMessage) {
 
-		System.out.println("Got message from MQTT" + paramMessage);
+		//System.out.println("Got message from MQTT" + paramMessage);
 
 		try {
-
 			if (paramMessage instanceof ActiveMQMessage) {
-
 				ActiveMQMessage mqMessage = (ActiveMQMessage) paramMessage;
-
 				String origMessage = new String(mqMessage.getContent().getData());
-				
-				origMessage = "{\"userId\"=\"1\",\"mobileNo\":\"9738415229\",\"longitude\":\"17.55534\",\"lattitude\":\"17.45343\",\"clientTime\":\""+new Date()+"\"}";
-				
-				System.out.println("----- Message Received for Location update -----\n");
-
+				//origMessage = "{\"userId\"=\"1\",\"mobileNo\":\"9738415229\",\"longitude\":\"17.55534\",\"lattitude\":\"17.45343\",\"clientTime\":\""+new Date()+"\"}";
+				//System.out.println("----- Message Received for Location update -----\n");
 				System.out.println("Message: " + origMessage + "\n");
-
-				System.out.println("------------------------------------------------");
+				//System.out.println("------------------------------------------------");
 
 				PositionBean bean = null;
-				try {
-
-					bean = new Gson().fromJson(origMessage, PositionBean.class);
-
-					if (origMessage != "") {
-
-						int userId = 0;
-
-						boolean isValidUser = false;
-
-						try {
-
-							userId = Integer.parseInt(bean.getUserId());
-							isValidUser = true;
-						} catch (Exception e) {
-
-							e.printStackTrace();
-
-							System.out.println("improper userId");
-						}
-
-						if (isValidUser && bean.getLattitude()!=null && bean.getLongitude()!=null) {
-
-							UserDetail userDetail = userDetailService.getUserById(userId);
-
-							LocationDetail locdt = new LocationDetail();
-
-							locdt.setLattitude(bean.getLattitude());
-
-							locdt.setLongitude(bean.getLongitude());
-
-							locdt.setMobileNo(bean.getMobileNo());
-
-							locdt.setUserId_fk(userDetail);
-
-							locdt.setUpdatedOn(new Date());
-
-							locdt.setClientTime(new Date());
-
-							locationDetailService.addLocationDetails(locdt);
-
-							System.out.println("Updated Location Detail");
-						
-						}else{
-						
-							System.out.println("could not update the location : "+bean);
-						}
-
-					}
-				} catch (Exception e) {
+				bean = new Gson().fromJson(origMessage, PositionBean.class);
+				if (origMessage != "") {
+					String userMobileNumber = null;
+					userMobileNumber = bean.getUsermobileno();
 					
-					System.out.println(" Improper location details: "+e.toString());
+					if ((userMobileNumber.length() == 10) && bean.getLatitude() != null && bean.getLongitude() != null) {
+						UserDetail userDetail = userDetailService.getUserByMobNo(userMobileNumber);
+						if (userDetail != null) {
+							LocationDetail locdt = new LocationDetail();
+							locdt.setLattitude(bean.getLatitude());
+							locdt.setLongitude(bean.getLongitude());
+							locdt.setMobileNo(bean.getUsermobileno());
+							locdt.setUserId_fk(userDetail);
+							locdt.setCreatedOn(new Date());
+							locdt.setUpdatedOn(new Date());
+							SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+							locdt.setClientTime(dt.parse(bean.getClientTime()));
+							locationDetailService.addLocationDetails(locdt);
+							System.out.println("Updated Location Details");
+						} else {
+							System.out.println("User Mobile Not Registered");
+						}
+					} else{
+						System.out.println(" Improper MobileNo/location details: "+bean);
+					}
 				}
-
 			}
 		} catch (Exception e) {
-			
-			System.out.println(" corrupt data : "+e.toString());
-		
+			e.printStackTrace();
+			System.out.println(" corrupted data : " + e);
 		}
-
 	}
 
 	public MessageConverter getMessageConverter() {

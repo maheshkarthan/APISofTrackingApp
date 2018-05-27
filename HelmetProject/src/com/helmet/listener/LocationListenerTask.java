@@ -70,11 +70,11 @@ public class LocationListenerTask implements MessageListener {
 
 						LocationDetail locdt = new LocationDetail();
 
-						locdt.setLattitude(bean.getLattitude());
+						locdt.setLattitude(bean.getLatitude());
 
 						locdt.setLongitude(bean.getLongitude());
 
-						locdt.setMobileNo(bean.getMobileNo());
+						locdt.setMobileNo(bean.getUsermobileno());
 
 						locdt.setUserId_fk(userDetail);
 
