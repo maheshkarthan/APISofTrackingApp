@@ -20,7 +20,7 @@ public class LocationDetailDaoImpl implements LocationDetailDao {
 
 		System.out.println("add Locaion details");
 
-		sessionFactory.getCurrentSession().saveOrUpdate(locationDetail);
+		sessionFactory.getCurrentSession().save(locationDetail);
 
 	}
 
