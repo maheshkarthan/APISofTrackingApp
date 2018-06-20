@@ -10,7 +10,7 @@ public class UserRegistrationBean {
 	
 	private String password;
 
-	private String userEmailId;;
+	private String userEmailId;
 	
 	public String getFullName() {
 
