@@ -1,9 +1,15 @@
 package com.helmet.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -71,5 +77,20 @@ public class LocationDetailDaoImpl implements LocationDetailDao {
 		return (LocationDetail) query.setString("mobileNo", mobileNo).uniqueResult();
 
 	}
+	
+	
+	@Override
+	public List<LocationDetail> listLocationDetailByDate(Date tripDate , String mobNo){
+		
+		List<LocationDetail> list =  new ArrayList<LocationDetail>();
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationDetail.class).add(Restrictions.eq("mobileNo", mobNo)).add(Restrictions.between("clientTime", tripDate, tripDate)).addOrder(Order.asc("clientTime"));
+
+		list = criteria.list();
+		
+		
+		return list;
+	}
+	
 
 }
