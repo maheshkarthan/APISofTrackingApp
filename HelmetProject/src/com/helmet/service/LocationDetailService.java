@@ -1,5 +1,6 @@
 package com.helmet.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.helmet.entity.LocationDetail;
@@ -19,5 +20,8 @@ public interface LocationDetailService {
 
 	
 	public LocationDetail getUserLocation(String mobileNo);
+	
+	
+	public List<LocationDetail> listLocationDetailByDate(Date tripDate , String mobNo);
 
 }

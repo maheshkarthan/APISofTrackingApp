@@ -1,5 +1,6 @@
 package com.helmet.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,14 @@ public class LocationDetailServiceImpl implements LocationDetailService {
 		
 		return locationDetaildao.getUserLocation(mobileNo);
 	}
+	
+	@Override
+	@Transactional
+	public List<LocationDetail> listLocationDetailByDate(Date tripDate , String mobNo) {
+		
+		return locationDetaildao.listLocationDetailByDate(tripDate, mobNo);
+	}
+	
+	
 
 }
